@@ -48,7 +48,7 @@ describe 'covet', ->
 
         it 'unsatisfied stubbings get nothing', (done) ->
           get "bunnies/2", (body, res) ->
-            expect(res.statusCode).to.equal(404)
+            expect(res.statusCode).to.equal(400)
             done()
 
       context "with an ID and a Name", ->
@@ -70,7 +70,7 @@ describe 'covet', ->
 
         it 'unsatisfied stubbings get nothing', (done) ->
           get "bunnies/3/11", (body, res) ->
-            expect(res.statusCode).to.equal(404)
+            expect(res.statusCode).to.equal(400)
             done()
 
 

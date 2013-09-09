@@ -13,18 +13,12 @@ module.exports =
       app[stubbing.verb] stubbing.path, express.bodyParser(), (req, res) ->
         expectedParams = massageExpectedParams(stubbing)
 
-        actualParams = if stubbing.verb == "get"
-          req.params
-        else
-          req.body
+        actualParams = getActualParams(req,stubbing.verb)
 
         if !stubbing.with? || isEqual(expectedParams, actualParams)
           res.json(stubbing.response)
         else
-          if stubbing.verb == "get"
-            res.send(404)
-          else
-            res.send(400)
+          res.send(400)
 
       stubbedRoutes.push(_(app.routes[stubbing.verb]).last())
       res.send(201)
@@ -59,6 +53,12 @@ massageExpectedParams = (stubbing) ->
     , {}
   else
     stubbing.with
+
+getActualParams = (req, verb) ->
+  if verb == "get"
+    req.params
+  else
+    req.body
 
 isEqual = (expected, actual) ->
   _(expected).all (expectedValue, key) ->
