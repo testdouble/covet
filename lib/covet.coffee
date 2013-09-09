@@ -11,7 +11,13 @@ module.exports =
     app.post config.routes.addRoute, express.bodyParser(), (req, res) ->
       stubbing = req.body
       app[stubbing.verb] stubbing.path, express.bodyParser(), (req, res) ->
-        res.json(stubbing.response)
+        console.log("body id is, ", req.params.id, " and with id is: ", stubbing.with?.id)
+        if stubbing.verb == "get" && stubbing.with
+          stubbingWithId = "#{stubbing.with.id}"
+        if !stubbing.with? || req.params.id == stubbingWithId
+          res.json(stubbing.response)
+        else
+          res.send(404)
       stubbedRoutes.push(_(app.routes[stubbing.verb]).last())
       res.send(201)
 
