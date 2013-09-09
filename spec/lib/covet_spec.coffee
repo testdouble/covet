@@ -124,3 +124,28 @@ describe 'covet', ->
             expect(res.statusCode).to.equal(400)
             done()
 
+    describe "dynamic, conditional DELETE route", ->
+      context "with an ID and an Age", ->
+        beforeEach (done) ->
+          post 'covet/routes',
+            verb: 'del'
+            path: '/bunnies/:id/:age'
+            with:
+              id: 3
+              age: 12
+            statusCode: 204
+            response: ''
+          , (body, res) ->
+            done()
+
+        it 'satisfied stubbing gets bunny', (done) ->
+          del "bunnies/3/12", (body, res) ->
+            expect(body).to.deep.equal('')
+            expect(res.statusCode).to.equal(204)
+            done()
+
+        it 'unsatisfied stubbings get nothing', (done) ->
+          del "bunnies/3/11", (body, res) ->
+            expect(res.statusCode).to.equal(400)
+            done()
+
