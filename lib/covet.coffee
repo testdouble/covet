@@ -46,7 +46,8 @@ createApp = (port) ->
 massageExpectedParams = (stubbing) ->
   if !stubbing.with?
     null
-  else if stubbing.verb == "get"
+  else if stubbing.verb != "post"
+    # stringify the URL params
     _(stubbing.with).inject (memo, value, key) ->
       memo[key] = String(value)
       memo
@@ -55,10 +56,10 @@ massageExpectedParams = (stubbing) ->
     stubbing.with
 
 getActualParams = (req, verb) ->
-  if verb == "get"
-    req.params
-  else
+  if verb == "post"
     req.body
+  else
+    req.params
 
 isEqual = (expected, actual) ->
   _(expected).all (expectedValue, key) ->

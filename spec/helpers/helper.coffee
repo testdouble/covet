@@ -20,6 +20,9 @@ root.get = (path, callback) ->
 root.post = (path, params, callback) ->
   request.post {url: urlFor(path), json: params}, handle(callback)
 
+root.put = (path, params, callback) ->
+  request.put {url: urlFor(path), json: params}, handle(callback)
+
 root.del = (path, callback) ->
   request.del {url: urlFor(path)}, handle(callback)
 

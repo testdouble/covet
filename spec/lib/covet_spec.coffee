@@ -100,3 +100,27 @@ describe 'covet', ->
             expect(res.statusCode).to.equal(400)
             done()
 
+    describe "dynamic, conditional PUT route", ->
+      context "with an ID and an Age", ->
+        beforeEach (done) ->
+          post 'covet/routes',
+            verb: 'put'
+            path: '/bunnies/:id/:age'
+            with:
+              id: 3
+              age: 12
+            response: BUNNY
+          , (body, res) ->
+            done()
+
+        it 'satisfied stubbing gets bunny', (done) ->
+          put "bunnies/3/12", {id: 3, age: 12}, (body, res) ->
+            expect(body).to.deep.equal(BUNNY)
+            expect(res.statusCode).to.equal(200)
+            done()
+
+        it 'unsatisfied stubbings get nothing', (done) ->
+          put "bunnies/3/11", {id: 3, age: 12}, (body, res) ->
+            expect(res.statusCode).to.equal(400)
+            done()
+
