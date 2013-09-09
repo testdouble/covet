@@ -64,8 +64,9 @@ describe 'covet', ->
             done()
 
         it 'satisfied stubbing gets bunny', (done) ->
-          get "bunnies/3/12", (body) ->
+          get "bunnies/3/12", (body, res) ->
             expect(body).to.deep.equal(BUNNY)
+            expect(res.statusCode).to.equal(200)
             done()
 
         it 'unsatisfied stubbings get nothing', (done) ->
@@ -83,13 +84,15 @@ describe 'covet', ->
             with:
               id: 3
               age: 12
+            statusCode: 201
             response: BUNNY
           , (body, res) ->
             done()
 
         it 'satisfied stubbing gets bunny', (done) ->
-          post "bunnies", {id: 3, age: 12}, (body) ->
+          post "bunnies", {id: 3, age: 12}, (body, res) ->
             expect(body).to.deep.equal(BUNNY)
+            expect(res.statusCode).to.equal(201)
             done()
 
         it 'unsatisfied stubbings get nothing', (done) ->
