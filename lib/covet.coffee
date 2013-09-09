@@ -11,10 +11,11 @@ module.exports =
     app.post config.routes.addRoute, express.bodyParser(), (req, res) ->
       stubbing = req.body
       app[stubbing.verb] stubbing.path, express.bodyParser(), (req, res) ->
-        console.log("body id is, ", req.params.id, " and with id is: ", stubbing.with?.id)
-        if stubbing.verb == "get" && stubbing.with
-          stubbingWithId = "#{stubbing.with.id}"
-        if !stubbing.with? || req.params.id == stubbingWithId
+        expectedParams = massageExpectedParams(stubbing)
+
+        actualParams = req.params
+
+        if !stubbing.with? || isEqual(expectedParams, actualParams)
           res.json(stubbing.response)
         else
           res.send(404)
@@ -40,3 +41,16 @@ removeFromArray = (array, itemToRemove) ->
 
 createApp = (port) ->
   _(express()).tap (app) -> app.listen(port)
+
+massageExpectedParams = (stubbing) ->
+  if !stubbing.with?
+    null
+  else if stubbing.verb == "get"
+    _(stubbing.with).inject (memo, value, key) ->
+      memo[key] = String(value)
+      memo
+    , {}
+
+isEqual = (expected, actual) ->
+  _(expected).all (expectedValue, key) ->
+    actual[key] == expectedValue

@@ -30,23 +30,46 @@ describe 'covet', ->
           done()
 
     describe "dynamic, conditional GET route", ->
-      beforeEach (done) ->
-        post 'covet/routes',
-          verb: 'get'
-          path: '/bunnies/:id'
-          with:
-            id: 3
-          response: BUNNY
-        , (body, res) ->
-          done()
+      context "with an ID", ->
+        beforeEach (done) ->
+          post 'covet/routes',
+            verb: 'get'
+            path: '/bunnies/:id'
+            with:
+              id: 3
+            response: BUNNY
+          , (body, res) ->
+            done()
 
+        it 'satisfied stubbing gets bunny', (done) ->
+          get "bunnies/3", (body) ->
+            expect(body).to.deep.equal(BUNNY)
+            done()
 
-      it 'satisfied stubbing gets bunny', (done) ->
-        get "bunnies/3", (body) ->
-          expect(body).to.deep.equal(BUNNY)
-          done()
+        it 'unsatisfied stubbings get nothing', (done) ->
+          get "bunnies/2", (body, res) ->
+            expect(res.statusCode).to.equal(404)
+            done()
 
-      it 'unsatisfied stubbings get nothing', (done) ->
-        get "bunnies/2", (body, res) ->
-          expect(res.statusCode).to.equal(404)
-          done()
+      context "with an ID and a Name", ->
+        beforeEach (done) ->
+          post 'covet/routes',
+            verb: 'get'
+            path: '/bunnies/:id/:age'
+            with:
+              id: 3
+              age: 12
+            response: BUNNY
+          , (body, res) ->
+            done()
+
+        it 'satisfied stubbing gets bunny', (done) ->
+          get "bunnies/3/12", (body) ->
+            expect(body).to.deep.equal(BUNNY)
+            done()
+
+        it 'unsatisfied stubbings get nothing', (done) ->
+          get "bunnies/3/11", (body, res) ->
+            expect(res.statusCode).to.equal(404)
+            done()
+
