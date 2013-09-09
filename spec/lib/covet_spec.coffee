@@ -19,3 +19,17 @@ describe 'covet', ->
           name: "Frank"
           age: 12
         done()
+
+    afterEach (done) ->
+      del "covet/routes", -> done()
+
+  describe "tear-down", ->
+    it "successfully tears down to prevent test pollution", (done) ->
+      get "bunnies/3", (body, res) ->
+        console.log(body)
+        done()
+
+
+
+
+
