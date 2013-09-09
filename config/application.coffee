@@ -9,11 +9,15 @@
 module.exports = require(process.env["LINEMAN_MAIN"]).config.extend "application",
   removeTasks:
     common: ["coffee", "less", "jshint", "handlebars", "jst", "concat", "images:dev", "webfonts:dev", "pages:dev"]
+    dev: ["server"]
     dist: ["uglify", "cssmin", "images:dist", "webfonts:dist", "pages:dist"]
 
+  appendTasks:
+    common: ["spec"]
 
   spec:
     options:
+      bail: false
       timeout: 3000
       ignoreLeaks: false
       ui: 'bdd'
@@ -22,3 +26,8 @@ module.exports = require(process.env["LINEMAN_MAIN"]).config.extend "application
     files:
       src: ['spec/lib/**/*']
 
+
+  watch:
+    spec:
+      files: ["lib/**/*", "spec/lib/**/*"]
+      tasks: ["spec"]

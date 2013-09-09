@@ -1,35 +1,52 @@
 describe 'covet', ->
 
-  describe "a super simple stubbing", ->
-    beforeEach (done) ->
-      post 'covet/routes',
-        verb: 'get'
-        path: '/bunnies/3'
-        response:
-          id: 3
-          name: "Frank"
-          age: 12
-      , (body, res) ->
-        done()
+  describe "stubbing", ->
+    BUNNY =
+      id: 3
+      name: "Frank"
+      age: 12
 
-    it 'gets the bunny', (done) ->
-      get "bunnies/3", (body) ->
-        expect(body).to.deep.equal
-          id: 3
-          name: "Frank"
-          age: 12
-        done()
+    describe "static GET route", ->
+      beforeEach (done) ->
+        post 'covet/routes',
+          verb: 'get'
+          path: '/bunnies/3'
+          response: BUNNY
+        , (body, res) ->
+          done()
 
-    afterEach (done) ->
-      del "covet/routes", -> done()
+      it 'gets the bunny', (done) ->
+        get "bunnies/3", (body) ->
+          expect(body).to.deep.equal(BUNNY)
+          done()
 
-  describe "tear-down", ->
-    it "successfully tears down to prevent test pollution", (done) ->
-      get "bunnies/3", (body, res) ->
-        console.log(body)
-        done()
+      afterEach (done) ->
+        del "covet/routes", -> done()
+
+    describe "tearing down the previous example group", ->
+      it "successfully tears down to prevent test pollution", (done) ->
+        get "bunnies/3", (body, res) ->
+          expect(res.statusCode).to.equal(404)
+          done()
+
+    describe "dynamic, conditional GET route", ->
+      beforeEach (done) ->
+        post 'covet/routes',
+          verb: 'get'
+          path: '/bunnies/:id'
+          with:
+            id: 3
+          response: BUNNY
+        , (body, res) ->
+          done()
 
 
+      it 'satisfied stubbing gets bunny', (done) ->
+        get "bunnies/3", (body) ->
+          expect(body).to.deep.equal(BUNNY)
+          done()
 
-
-
+      it 'unsatisfied stubbings get nothing', (done) ->
+        get "bunnies/2", (body, res) ->
+          expect(res.statusCode).to.equal(404)
+          done()
