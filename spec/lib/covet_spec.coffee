@@ -51,7 +51,7 @@ describe 'covet', ->
             expect(res.statusCode).to.equal(400)
             done()
 
-      context "with an ID and a Name", ->
+      context "with an ID and an Age", ->
         beforeEach (done) ->
           post 'covet/routes',
             verb: 'get'
@@ -76,7 +76,7 @@ describe 'covet', ->
 
 
     describe "dynamic, conditional POST route", ->
-      context "with an ID and a Name", ->
+      context "with an ID and an Age", ->
         beforeEach (done) ->
           post 'covet/routes',
             verb: 'post'
