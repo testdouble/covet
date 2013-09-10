@@ -138,7 +138,7 @@ describe 'covet', ->
       context "with an ID and an Age", ->
         beforeEach (done) ->
           post 'covet/routes',
-            verb: 'del'
+            verb: 'delete'
             path: '/bunnies/:id/:age'
             request:
               params:
