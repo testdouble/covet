@@ -161,3 +161,24 @@ describe 'covet', ->
             expect(res.statusCode).to.equal(400)
             done()
 
+    describe "overriding routes", ->
+      beforeEach (done) ->
+        post 'covet/routes',
+          verb: 'get'
+          path: '/bunnies/:id'
+          response:
+            json:
+              name: "Default Bunny"
+        , ->
+          post 'covet/routes',
+            verb: 'get'
+            path: '/bunnies/3'
+            response:
+              json: BUNNY
+          , ->
+            done()
+
+      it 'gets the more-specifically-stubbed bunny', (done) ->
+        get "bunnies/3", (body) ->
+          expect(body).to.deep.equal(BUNNY)
+          done()

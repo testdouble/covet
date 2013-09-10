@@ -18,7 +18,9 @@ module.exports =
         else
           res.send(400)
 
-      stubbedRoutes.push(_(app.routes[stubbing.verb]).last())
+      newRoute = _(app.routes[stubbing.verb]).last()
+      app.routes[stubbing.verb] = [newRoute].concat(_(app.routes[stubbing.verb]).initial())
+      stubbedRoutes.push(newRoute)
       res.send(201)
 
     app.delete config.routes.resetRoutes, (req, res) ->
