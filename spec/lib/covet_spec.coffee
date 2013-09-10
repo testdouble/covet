@@ -11,7 +11,8 @@ describe 'covet', ->
         post 'covet/routes',
           verb: 'get'
           path: '/bunnies/3'
-          response: BUNNY
+          response:
+            json: BUNNY
         , (body, res) ->
           done()
 
@@ -35,9 +36,11 @@ describe 'covet', ->
           post 'covet/routes',
             verb: 'get'
             path: '/bunnies/:id'
-            with:
-              id: 3
-            response: BUNNY
+            request:
+              params:
+                id: 3
+            response:
+              json: BUNNY
           , (body, res) ->
             done()
 
@@ -56,10 +59,12 @@ describe 'covet', ->
           post 'covet/routes',
             verb: 'get'
             path: '/bunnies/:id/:age'
-            with:
-              id: 3
-              age: 12
-            response: BUNNY
+            request:
+              params:
+                id: 3
+                age: 12
+            response:
+              json: BUNNY
           , (body, res) ->
             done()
 
@@ -81,11 +86,13 @@ describe 'covet', ->
           post 'covet/routes',
             verb: 'post'
             path: '/bunnies'
-            with:
-              id: 3
-              age: 12
-            statusCode: 201
-            response: BUNNY
+            request:
+              body:
+                id: 3
+                age: 12
+            response:
+              json: BUNNY
+              statusCode: 201
           , (body, res) ->
             done()
 
@@ -106,10 +113,12 @@ describe 'covet', ->
           post 'covet/routes',
             verb: 'put'
             path: '/bunnies/:id/:age'
-            with:
-              id: 3
-              age: 12
-            response: BUNNY
+            request:
+              params:
+                id: 3
+                age: 12
+            response:
+              json: BUNNY
           , (body, res) ->
             done()
 
@@ -130,11 +139,13 @@ describe 'covet', ->
           post 'covet/routes',
             verb: 'del'
             path: '/bunnies/:id/:age'
-            with:
-              id: 3
-              age: 12
-            statusCode: 204
-            response: ''
+            request:
+              params:
+                id: 3
+                age: 12
+            response:
+              json: ''
+              statusCode: 204
           , (body, res) ->
             done()
 
