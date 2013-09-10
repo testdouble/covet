@@ -1,5 +1,7 @@
 # Covet
 
+[![Build Status](https://secure.travis-ci.org/testdouble/covet.png)](http://travis-ci.org/testdouble/covet)
+
 Covet is a node module that creates or receives an [express](http://expressjs.com) application and defines a few routes that enable users to dynamically add new routes to the app (and then tear down those dynamic routes when needed).
 
 The use case for this is almost exclusively integration tests which cross an HTTP boundary. When a test needs a way to stub a response to a particular request on a *remote* server, Covet provides a way to do it using HTTP.
