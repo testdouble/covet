@@ -1,5 +1,9 @@
 describe 'covet', ->
 
+  afterEach (done) ->
+    del "covet/routes", -> done()
+
+
   describe "stubbing", ->
     BUNNY =
       id: 3
@@ -20,9 +24,6 @@ describe 'covet', ->
         get "bunnies/3", (body) ->
           expect(body).to.deep.equal(BUNNY)
           done()
-
-      afterEach (done) ->
-        del "covet/routes", -> done()
 
     describe "tearing down the previous example group", ->
       it "successfully tears down to prevent test pollution", (done) ->
