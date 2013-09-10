@@ -11,12 +11,12 @@ module.exports =
     app.post config.routes.addRoute, express.bodyParser(), (req, res) ->
       stubbing = req.body
       app[stubbing.verb] stubbing.path, express.bodyParser(), (req, res) ->
-        respondWithStatusCode = stubbing.statusCode || 200
-        expectedParams = massageExpectedParams(stubbing)
         actualParams = getActualParams(req,stubbing.verb)
 
-        if !stubbing.with? || isEqual(expectedParams, actualParams)
-          res.send(respondWithStatusCode, stubbing.response)
+        if stubbingSatisfied(req, stubbing.request)
+          response = if stubbing.response? then stubbing.response else {}
+          statusCode = if stubbing.response.statusCode? then stubbing.response.statusCode else 200
+          res.send(statusCode, response.json)
         else
           res.send(400)
 
@@ -43,17 +43,6 @@ removeFromArray = (array, itemToRemove) ->
 createApp = (port) ->
   _(express()).tap (app) -> app.listen(port)
 
-massageExpectedParams = (stubbing) ->
-  if !stubbing.with?
-    null
-  else if stubbing.verb != "post"
-    # stringify the URL params
-    _(stubbing.with).inject (memo, value, key) ->
-      memo[key] = String(value)
-      memo
-    , {}
-  else
-    stubbing.with
 
 getActualParams = (req, verb) ->
   if verb == "post"
@@ -61,6 +50,30 @@ getActualParams = (req, verb) ->
   else
     req.params
 
+
+stubbingSatisfied = (actualRequest, rawExpectedRequest) ->
+  return true unless rawExpectedRequest?
+  expectedRequest = massageRequest(rawExpectedRequest)
+
+  isEqual(expectedRequest, actualRequest)
+
+massageRequest = (request) ->
+  _(request).inject (memo, value, attr) ->
+    memo[attr] = switch attr
+      when "params" then stringifyValues(value)
+      else value
+    memo
+  , {}
+
+stringifyValues = (object) ->
+  _(object).inject (memo, value, key) ->
+    memo[key] = String(value)
+    memo
+  , {}
+
 isEqual = (expected, actual) ->
   _(expected).all (expectedValue, key) ->
-    actual[key] == expectedValue
+    switch key
+      when "params" then _(expected.params).all (v,k) -> _(v).isEqual(actual.params[k])
+      else _(expectedValue).isEqual(actual[key])
+
