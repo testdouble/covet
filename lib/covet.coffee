@@ -11,8 +11,6 @@ module.exports =
     app.post config.routes.addRoute, express.bodyParser(), (req, res) ->
       stubbing = req.body
       app[stubbing.verb] stubbing.path, express.bodyParser(), (req, res) ->
-        actualParams = getActualParams(req,stubbing.verb)
-
         if stubbingSatisfied(req, stubbing.request)
           response = if stubbing.response? then stubbing.response else {}
           statusCode = if stubbing.response.statusCode? then stubbing.response.statusCode else 200
@@ -42,14 +40,6 @@ removeFromArray = (array, itemToRemove) ->
 
 createApp = (port) ->
   _(express()).tap (app) -> app.listen(port)
-
-
-getActualParams = (req, verb) ->
-  if verb == "post"
-    req.body
-  else
-    req.params
-
 
 stubbingSatisfied = (actualRequest, rawExpectedRequest) ->
   return true unless rawExpectedRequest?
