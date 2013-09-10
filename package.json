@@ -1,6 +1,6 @@
 {
   "name": "covet",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Dynamically build and tear-down tests' API responses using XHRs",
   "author": {
     "name": "Justin Searls",
