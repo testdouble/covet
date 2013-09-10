@@ -24,6 +24,7 @@ module.exports =
     app.delete config.routes.resetRoutes, (req, res) ->
       _(stubbedRoutes).each (route) ->
         removeFromArray(app.routes[route.method], route)
+      stubbedRoutes = []
       res.send(204)
 
 extendDefaultConfig = (options = {}) ->
