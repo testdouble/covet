@@ -15,6 +15,7 @@
   "devDependencies": {
     "mocha": "~1.12.1",
     "chai": "~1.7.2",
-    "request": "~2.27.0"
+    "request": "~2.27.0",
+    "lineman": ">= 0.12"
   }
 }

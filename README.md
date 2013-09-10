@@ -8,39 +8,34 @@ The use case for this is almost exclusively integration tests which cross an HTT
 
 ## api
 
-Example usage in CoffeeScript & jQuery
+The API is in progress. Check out the primary integration [spec](https://github.com/testdouble/covet/blob/master/spec/lib/covet_spec.coffee) for examples.
 
-### dynamically creating a new route
+## Running the tests
 
-``` coffeescript
-
-$.post '/covet/routes',
-  verb: 'get'
-  path: '/bunnies/3'
-  response:
-    id: 3
-    name: "Frank"
-    age: 12
+```
+$ npm install -g lineman
+$ npm install
+$ lineman spec --stack
 ```
 
-Subsequently, the application could call a function like this with `3`:
+Should give you output in TAP13 like this:
 
-``` coffeescript
-getBunny = (id) ->
-  $.get "/bunnies/#{id}", (response) ->
-    alert(response.name)
 ```
-
-And see the alert.
-
-### resetting all routes
-
-``` coffeescript
-$.ajax
-  url: '/covet/routes',
-  type: 'DELETE'
+Running "spec:files" (spec) task
+1..12
+ok 1 covet stubbing static GET route gets the bunny
+ok 2 covet stubbing tearing down the previous example group successfully tears down to prevent test pollution
+ok 3 covet stubbing dynamic, conditional GET route with an ID satisfied stubbing gets bunny
+ok 4 covet stubbing dynamic, conditional GET route with an ID unsatisfied stubbings get nothing
+ok 5 covet stubbing dynamic, conditional GET route with an ID and an Age satisfied stubbing gets bunny
+ok 6 covet stubbing dynamic, conditional GET route with an ID and an Age unsatisfied stubbings get nothing
+ok 7 covet stubbing dynamic, conditional POST route with an ID and an Age satisfied stubbing gets bunny
+ok 8 covet stubbing dynamic, conditional POST route with an ID and an Age unsatisfied stubbings get nothing
+ok 9 covet stubbing dynamic, conditional PUT route with an ID and an Age satisfied stubbing gets bunny
+ok 10 covet stubbing dynamic, conditional PUT route with an ID and an Age unsatisfied stubbings get nothing
+ok 11 covet stubbing dynamic, conditional DELETE route with an ID and an Age satisfied stubbing gets bunny
+ok 12 covet stubbing dynamic, conditional DELETE route with an ID and an Age unsatisfied stubbings get nothing
+# tests 12
+# pass 12
+# fail 0
 ```
-
-## todo
-
-* Support stringified regex paths with a "regex" boolean
