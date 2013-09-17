@@ -6,6 +6,10 @@
     "name": "Justin Searls",
     "company": "Test Double, LLC"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/testdouble/covet.git"
+  },
   "main": "main.js",
   "dependencies": {
     "express": "~ 3.4",
