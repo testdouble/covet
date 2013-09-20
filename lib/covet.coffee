@@ -18,16 +18,17 @@ module.exports =
         else
           res.send(400)
 
-      newRoute = _(app.routes[stubbing.verb]).last()
-      app.routes[stubbing.verb] = [newRoute].concat(_(app.routes[stubbing.verb]).initial())
-      stubbedRoutes.push(newRoute)
+      stubbedRoutes.push(lastRoute(app, stubbing.verb))
+      moveLastRouteToTheFront(app, stubbing.verb)
       res.send(201)
+    moveLastRouteToTheFront(app, 'post')
 
     app.delete config.routes.resetRoutes, (req, res) ->
       _(stubbedRoutes).each (route) ->
         removeFromArray(app.routes[route.method], route)
       stubbedRoutes = []
       res.send(204)
+    moveLastRouteToTheFront(app, 'delete')
 
 extendDefaultConfig = (options = {}) ->
   _(options).tap (options) ->
@@ -70,3 +71,8 @@ isEqual = (expected, actual) ->
       when "params" then _(expected.params).all (v,k) -> _(v).isEqual(actual.params[k])
       else _(expectedValue).isEqual(actual[key])
 
+lastRoute = (app, verb) ->
+  _(app.routes[verb]).last()
+
+moveLastRouteToTheFront = (app, verb) ->
+  app.routes[verb] = [lastRoute(app, verb)].concat(_(app.routes[verb]).initial())
