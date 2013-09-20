@@ -1,3 +1,7 @@
+covet = require('./../../lib/covet')
+express = require('express')
+_ = require("underscore")
+
 root = global
 
 root.expect = require('chai').expect
@@ -26,6 +30,7 @@ root.put = (path, params, callback) ->
 root.del = (path, callback) ->
   request.del {url: urlFor(path)}, handle(callback)
 
-
-covet = require ('./../../lib/covet')
-covet.start()
+covet.start
+  app: _(express()).tap (app) ->
+    app.all '*', (req, res) -> res.send(404)
+    app.listen(process.env.COVET_PORT || 8000)
