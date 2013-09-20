@@ -1,3 +1,5 @@
+covet = require('./../../lib/covet')
+express = require('express')
 _ = require("underscore")
 
 root = global
@@ -27,10 +29,6 @@ root.put = (path, params, callback) ->
 
 root.del = (path, callback) ->
   request.del {url: urlFor(path)}, handle(callback)
-
-
-covet = require('./../../lib/covet')
-express = require('express')
 
 covet.start
   app: _(express()).tap (app) ->
