@@ -8,6 +8,11 @@ module.exports =
     config = extendDefaultConfig(options)
     app = config.app
 
+    if (config.routes.catchAllRoute)
+      app.all config.routes.catchAllRoute, express.bodyParser(), (req, res) ->
+        # match any unmatched route and send a 404
+        res.send(404)
+
     app.post config.routes.addRoute, express.bodyParser(), (req, res) ->
       stubbing = req.body
       app[stubbing.verb] stubbing.path, express.bodyParser(), (req, res) ->
@@ -29,11 +34,19 @@ module.exports =
       stubbedRoutes = []
       res.send(204)
 
+    # move the post and delete routes we just added to the beginning in case the app
+    # has a catch all route defined
+    covetRoute = _(app.routes['post']).last()
+    app.routes['post'] = [covetRoute].concat(_(app.routes['post']).initial())
+    covetRoute = _(app.routes['delete']).last()
+    app.routes['delete'] = [covetRoute].concat(_(app.routes['delete']).initial())
+
 extendDefaultConfig = (options = {}) ->
   _(options).tap (options) ->
     options.port ||= process.env.COVET_PORT || 8000
     options.app ||= createApp(options.port)
     options.routes ||= {}
+    options.routes.catchAllRoute ||= undefined
     options.routes.addRoute ||= "/covet/routes"
     options.routes.resetRoutes ||= "/covet/routes"
 

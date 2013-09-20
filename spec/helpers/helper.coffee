@@ -28,4 +28,7 @@ root.del = (path, callback) ->
 
 
 covet = require ('./../../lib/covet')
-covet.start()
+config = routes:
+  catchAllRoute: '*'
+
+covet.start(config)
