@@ -8,7 +8,7 @@ The use case for this is almost exclusively integration tests which cross an HTT
 
 ## api
 
-The API is in progress. Check out the primary integration [spec](https://github.com/testdouble/covet/blob/master/spec/lib/covet_spec.coffee) for examples.
+The API is in progress. Check out the primary integration [spec](https://github.com/testdouble/covet/blob/main/spec/lib/covet_spec.coffee) for examples.
 
 ## Running the tests
 
